@@ -1,3 +1,24 @@
 {
-  "persons": []
+  "persons": [
+    {
+      "name": "Erkki Esimerkki",
+      "number": "040123456",
+      "id": 1
+    },
+    {
+      "name": "Satu Saparo",
+      "number": "040234567",
+      "id": 2
+    },
+    {
+      "name": "Iida Ilmiö",
+      "number": "040345678",
+      "id": 3
+    },
+    {
+      "name": "Seppo Siikanen",
+      "number": "04098765",
+      "id": 4
+    }
+  ]
 }
