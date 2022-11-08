@@ -8,7 +8,7 @@ const App = (props) => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [message, setMessage] = useState('Notification')
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     dataService
@@ -33,6 +33,11 @@ const App = (props) => {
       setNewName('')
       setNewNumber('')
       setMessage(`Added ${newName}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }).catch(error => {
+      setMessage(`${newName} already exists in phonebook`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
