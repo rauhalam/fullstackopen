@@ -4,11 +4,23 @@ import Form from './components/Form'
 import Persons from './components/Persons'
 import Notification from './components/Notification'
 
+const Filter = (props) => {
+  return (
+    <p>
+      Filter shown with 
+      <input 
+      onChange={text => props.setSearch(text.target.value)}
+      />
+    </p>
+  )
+}
+
 const App = (props) => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [message, setMessage] = useState(null)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     dataService
@@ -68,14 +80,21 @@ const App = (props) => {
     setNewNumber(event.target.value)
   }
 
+  const numbersToShow = (search === '')
+      ? persons
+      : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification message={message}/>
+      <Filter setSearch={setSearch}/>
+
+      <h2>Add new</h2>
       <Form addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} deletePerson={deletePerson}/>
+      <Persons persons={numbersToShow} deletePerson={deletePerson}/>
     </div>
   )
 
