@@ -7,9 +7,9 @@ import Notification from './components/Notification'
 const Filter = (props) => {
   return (
     <p>
-      Filter shown with 
-      <input 
-      onChange={text => props.setSearch(text.target.value)}
+      Filter shown with
+      <input
+        onChange={text => props.setSearch(text.target.value)}
       />
     </p>
   )
@@ -25,7 +25,7 @@ const App = (props) => {
   useEffect(() => {
     dataService
       .getAll()
-        .then(initialData => {
+      .then(initialData => {
         setPersons(initialData)
       })
   }, [])
@@ -34,26 +34,26 @@ const App = (props) => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1,
+      number: newNumber
     }
 
     dataService
-    .create(personObject)
-    .then(returnedData => {
-      setPersons(persons.concat(returnedData))
-      setNewName('')
-      setNewNumber('')
-      setMessage(`Added ${newName}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }).catch(error => {
-      setMessage(`${newName} already exists in phonebook`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    })
+      .create(personObject)
+      .then(returnedData => {
+        setPersons(persons.concat(returnedData))
+        setNewName('')
+        setNewNumber('')
+        setMessage(`Added ${newName}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      }).catch(error => {
+        const message = JSON.stringify(error.response.data)
+        setMessage(`${message}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
 
   }
 
@@ -61,16 +61,16 @@ const App = (props) => {
     const person = persons.find(n => n.id === id)
     if (window.confirm(`Are you sure you want to delete ${person.name}?`) === true) {
       dataService
-      .deleteObject(person.id)
-      .then(() => {
-        setPersons(persons.filter((person) => person.id !== id))
-        setMessage(`${person.name} deleted`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      })   
+        .deleteObject(person.id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id))
+          setMessage(`${person.name} deleted`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
     }
-  } 
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -81,20 +81,20 @@ const App = (props) => {
   }
 
   const numbersToShow = (search === '')
-      ? persons
-      : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
+    ? persons
+    : persons.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message}/>
-      <Filter setSearch={setSearch}/>
+      <Notification message={message} />
+      <Filter setSearch={setSearch} />
 
       <h2>Add new</h2>
       <Form addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons persons={numbersToShow} deletePerson={deletePerson}/>
+      <Persons persons={numbersToShow} deletePerson={deletePerson} />
     </div>
   )
 
