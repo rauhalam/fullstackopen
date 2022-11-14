@@ -1,2 +1,6 @@
-part3_exercises/
+part1_followup/
+part2_followup/
 part3_followup/
+.git/
+package.json
+package-lock.json
