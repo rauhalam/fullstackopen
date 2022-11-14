@@ -1,99 +1,84 @@
 import React from "react"
 import { useState } from 'react'
 
-const Header = ({header}) => {
+const Header = ({ header }) => {
   return (
     <h1>{header}</h1>
   )
 }
 
-const Button = ({handleClick, text}) => {
+const Button = ({ handleClick, text }) => {
   return (
-  <button onClick={handleClick}>{text}</button>
+    <button onClick={handleClick}>{text}</button>
   )
 }
 
-const Feedback = ({name, result}) => {
+const StatisticLine = ({ name, result }) => {
+  return (
+    <tr>
+      <td>{name}</td>
+      <td>{result}</td>
+    </tr>
+  )
+}
+
+const Statistics = ({ good, neutral, bad, sum }) => {
+  const noFeedback = (sum === 0)
   return (
     <div>
-      <p>{name} {result}</p>
+      {noFeedback ? (
+        <table>
+          <tbody>
+            <StatisticLine name='No feedback given' result={null} />
+          </tbody>
+        </table>
+      ) : (
+        <table>
+          <tbody>
+            <StatisticLine name='good' result={good} />
+            <StatisticLine name='neutral' result={neutral} />
+            <StatisticLine name='bad' result={bad} />
+            <StatisticLine name='all' result={sum} />
+            <StatisticLine name='average' result={(good - bad) / sum} />
+            <StatisticLine name='positive' result={good / sum} />
+          </tbody>
+        </table>
+      )}
     </div>
   )
 }
 
-const All = ({good, neutral, bad}) => {
-  return (
-    <p>all {good+neutral+bad}</p>
-  )
-}
-
-const Average = ({good, neutral, bad}) => {
-  return (
-    <p>average {(good-bad)/(good+neutral+bad)}</p>
-  )
-}
-
-const Positive = ({good, neutral, bad}) => {
-  return (
-    <p>positive {good/(good+neutral+bad)}</p>
-  )
-}
-
-const Statistics = ({handleGood, handleNeutral, handleBad, good, neutral, bad}) => {
-  if (good+neutral+bad === 0) {
-    return (
-      <div>
-        <Header header='give feedback'/>
-        <div>
-            <Button handleClick={handleGood} text='good'/>
-            <Button handleClick={handleNeutral} text='neutral'/>
-            <Button handleClick={handleBad} text='bad'/>
-        </div>
-        <Header header='statistics'/>
-        <p>No feedback given</p>
-      </div>)
-  } else {
-    return (
-      <div>
-        <Header header='give feedback'/>
-        <div>
-            <Button handleClick={handleGood} text='good'/>
-            <Button handleClick={handleNeutral} text='neutral'/>
-            <Button handleClick={handleBad} text='bad'/>
-        </div>
-        <Header header='statistics'/>
-        <Feedback name='good' result={good}/>
-        <Feedback name='neutral' result={neutral}/>
-        <Feedback name='bad' result={bad}/>
-        <All good={good} neutral={neutral} bad={bad}/>
-        <Average good={good} neutral={neutral} bad={bad}/>
-        <Positive good={good} neutral={neutral} bad={bad}/>
-      </div>
-    )
-  }
-}
-
 
 const App = () => {
-  // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  const [sum, setSum] = useState(0)
 
   const handleGood = () => {
     setGood(good + 1)
+    setSum(good + neutral + bad + 1)
   }
   const handleNeutral = () => {
     setNeutral(neutral + 1)
+    setSum(good + neutral + bad + 1)
   }
   const handleBad = () => {
     setBad(bad + 1)
+    setSum(good + neutral + bad + 1)
   }
 
 
   return (
     <div>
-      <Statistics handleGood={handleGood} handleNeutral={handleNeutral} handleBad={handleBad} good={good} neutral={neutral} bad={bad}/>
+      <Header header='give feedback' />
+      <div>
+        <Button handleClick={handleGood} text='good' />
+        <Button handleClick={handleNeutral} text='neutral' />
+        <Button handleClick={handleBad} text='bad' />
+      </div>
+      <Header header='statistics' />
+      <Statistics good={good} neutral={neutral} bad={bad} sum={sum} />
     </div>
   )
 }
