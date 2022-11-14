@@ -1,0 +1,18 @@
+Selain->Palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+Palvelin->Selain: Status 302
+
+Muistiinpanon lisäys aktivoi tapahtumankäsittelijän, joka lähettää POST-pyynnön exampleapp/notes -sijaintiin. POST-pyynnöstä huolehtii koodi, joka käsittelee pyynnön mukana tulevan bodyn sisällön. Palvelin luo olion uudesta muistiinpanosta ja tallentaa sen taulukkoon. 302-statuksen myötä palvelin kehottaa selainta tekemään HTTP GET pyynnön sijaintiin exampleapp/notes
+
+Selain->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Palvelin->Selain: HTML
+Selain->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Palvelin->Selain: main.css
+Selain->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Palvelin->Selain: main.js
+
+Js-koodia aletaan suorittamaan. Koodi luo listan, johon se appendaa palvelimelta haetut tallennetut muistiinpanot.
+
+Selain->Palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Palvelin->Selain: [..., {lisätty muistiinpano}]
+
+
