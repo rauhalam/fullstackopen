@@ -10,6 +10,7 @@ const App = (props) => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
@@ -36,18 +37,28 @@ const App = (props) => {
         dataService
           .update(person.id, changedPerson)
           .then(response => {
-            setPersons(persons.map(person => person.number !== newNumber ? person : response.data))
-            setNewName('')
-            setNewNumber('')
-            setMessage(`Updated ${newName}'s number`)
-            setTimeout(() => {
-              setMessage(null)
-            }, 5000)
+            if (response !== null) {
+              setPersons(persons.map(person => person.name === changedPerson.name ? response : person))
+              setNewName('')
+              setNewNumber('')
+              setMessage(`Updated ${newName}'s number`)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+            } else {
+              setPersons(persons.filter(person => person.name !== changedPerson.name))
+              setNewName('')
+              setNewNumber('')
+              setErrorMessage(`${newName} has been removed from server`)
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+            }
           }).catch(error => {
-            const message = JSON.stringify(error.response.data)
-            setMessage(`${message}`)
+            const message = Object.values(error.response.data)
+            setErrorMessage(`${message}`)
             setTimeout(() => {
-              setMessage(null)
+              setErrorMessage(null)
             }, 5000)
           })
       } else {
@@ -66,10 +77,10 @@ const App = (props) => {
             setMessage(null)
           }, 5000)
         }).catch(error => {
-          const message = JSON.stringify(error.response.data)
-          setMessage(`${message}`)
+          const message = Object.values(error.response.data)
+          setErrorMessage(`${message}`)
           setTimeout(() => {
-            setMessage(null)
+            setErrorMessage(null)
           }, 5000)
         })
     }
@@ -86,6 +97,12 @@ const App = (props) => {
           setMessage(`${person.name} deleted`)
           setTimeout(() => {
             setMessage(null)
+          }, 5000)
+        }).catch(error => {
+          const message = Object.values(error.response.data)
+          setErrorMessage(`${message}`)
+          setTimeout(() => {
+            setErrorMessage(null)
           }, 5000)
         })
     }
@@ -106,7 +123,7 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} errorMessage={errorMessage} />
       <Filter setSearch={setSearch} />
 
       <h2>Add new</h2>
